@@ -1,11 +1,13 @@
-import React, { useState, useContext } from "react";
+import React, {useState, useContext} from "react";
 import { AuthContext } from "./index";
-import * as firebase from "firebase";
+import firebase from "firebase/app";
+import { googleProvider } from "./firebase.config";
+
 
 const Join = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
+    const [error, setErrors] = useState("");
 
     const Auth = useContext(AuthContext);
     const handleForm = e => {
@@ -17,14 +19,26 @@ const Join = () => {
                 if (res.user) Auth.setLoggedIn(true);
             })
             .catch(e => {
-                setError(e.message);
-            })
+                setErrors(e.message);
+            });
     };
+
+    const handleLoginWithGoogle = e => {
+        firebase
+        .auth()
+        .signInWithPopup(googleProvider)
+        .then(res =>{
+            if (res.user) Auth.setLoggedIn(true);
+        })
+        .catch(e => {
+            setErrors(e.message);
+        })
+    }
 
     return (
         <div>
             <h1>Join</h1>
-            <from onSubmit={e => handleForm(e)}>
+            <form onSubmit={e => handleForm(e)}>
                 <input
                     value={email}
                     onChange={e => setEmail(e.target.value)}
@@ -40,15 +54,16 @@ const Join = () => {
                     placeholder="password"
                 />
                 <hr />
-                <button class="googleBtn" type="button">
+                <button onClick={e => handleLoginWithGoogle(e)} class="googleBtn" type="button">
                     <img
                         src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
                         alt="logo"
                     />
-                    Login Witth Google
+                    Login with Google
                 </button>
                 <button type="submit">Login</button>
-            </from>
+                <span>{error}</span>
+            </form>
         </div>
     );
 };

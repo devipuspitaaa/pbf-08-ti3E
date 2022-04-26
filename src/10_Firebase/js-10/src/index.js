@@ -1,18 +1,15 @@
 import React, {useState} from 'react';
-import ReactDOM from 'react-dom/client';
+import ReactDOM from "react-dom";
 import {Switch, BrowserRouter as Router, Route} from "react-router-dom";
-import routes from "./routes.js";
+import routes from './routes';
 import Header from "./Header";
-import * as firebase from "firebase";
-import firebaseConfig from "./firebase.config";
 import "./styles.css";
-import './index.css';
-// import App from './App';
-// import reportWebVitals from './reportWebVitals';
+import firebase from "firebase/app";
+import firebaseConfig from './firebase.config';
 
 firebase.initializeApp(firebaseConfig);
-
 export const AuthContext = React.createContext(null);
+
 function App(){
   const [isLoggedIn, setLoggedIn] = useState(false);
 
